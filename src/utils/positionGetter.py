@@ -11,15 +11,22 @@ class PositionClicker(PyMouseEvent):
         self.pos = 0
 
     def click(self, x, y, button, press):
-        if self.messages[0] != '' and self.pos >= len(self.messages):
-            self.stop()
+        if self.messages[0] != '':
+            if self.pos >= len(self.messages):
+                self.stop()
 
-        if button == 1:
-            if press:
-                print(self.messages[self.pos], x, y)
-                self.pos += 1
-        else:  # Exit if any other mouse button used
-            self.stop()
+            if button == 1:
+                if press:
+                    print(self.messages[self.pos], x, y)
+                    self.pos += 1
+            else:  # Exit if any other mouse button used
+                self.stop()
+        else:
+            if button == 1:
+                if press:
+                    print(x, y)
+            else:  # Exit if any other mouse button used
+                self.stop()
 
 
 class mouseInterupter(PyMouseEvent):
@@ -34,7 +41,5 @@ class mouseInterupter(PyMouseEvent):
 
 
 if __name__ == "__main__":
-    # pC = PositionClicker()
-    # pC.run()
-    mI = mouseInterupter()
-    mI.run()
+    pC = PositionClicker()
+    pC.run()

@@ -49,19 +49,19 @@ def work_1(Load, A, GoDown, GoRight):
         mouseClick(*A)
         time.sleep(0.7)
 
-    mousePress(0.1, *GoDown)
+    mousePress(0.15, *GoDown)
     for i in range(10):  # 防止出现对讲机
         mouseClick(*A)
-        time.sleep(0.2)
-    mousePress(0.1, *GoDown)
+        time.sleep(0.1)
+    mousePress(0.15, *GoDown)
 
-    mousePress(0.2, *GoRight)
+    mousePress(0.1, *GoRight)
 
-    for i in range(15):  # 防止出现对讲机
+    for i in range(10):  # 防止出现对讲机
         mouseClick(*A)
         time.sleep(0.1)
 
-    mousePress(0.7, *GoRight)
+    mousePress(0.6, *GoRight)
 
 
 def work_2(A, B, Home, GoDown, GoRight, Speed):
@@ -99,13 +99,13 @@ def work_2(A, B, Home, GoDown, GoRight, Speed):
     mouseClick(*GoDown)
     time.sleep(0.3)
 
-    mouseClick(*Speed)
-    time.sleep(0.3)
-
     mouseClick(*A)
     time.sleep(0.3)
 
-    mouseClick(*GoRight)
+    mouseClick(*GoDown)
+    time.sleep(0.3)
+
+    mouseClick(*Speed)
     time.sleep(0.3)
 
     mouseClick(*A)
@@ -119,22 +119,26 @@ def work_2(A, B, Home, GoDown, GoRight, Speed):
 
 
 def numberCapture(name, min_limit, pos1_x, pos1_y, pos2_x, pos2_y):
-    img = grab_screen(pos1_x, pos1_y, pos2_x, pos2_y)
-    img.save(os.path.join('../screenshots', name + '.png'))
-    img = Image.open(os.path.join('../screenshots', name + '.png'))
-    number = pytesseract.image_to_string(
-        img, lang="chi_sim", config='--psm 7 --oem 0 -c tessedit_char_whitelist=0123456789')
-
-    try:
-        number = int(number)
-        print(number)
-    except Exception:
-        print('not captured')
-        return 0
-
-    if int(number) == min_limit or int(number) == min_limit + 1:  # avoid screenshot 穿屏导致出现大数
-        return 1
-    return 0
+    count = 0  # if not captured, retry for 10; 确保截取到正确的图片。逻辑: 图片正确那么必有数字结果。要求：壁纸没有扰乱向
+    while count <= 5:
+        img = grab_screen(pos1_x, pos1_y, pos2_x, pos2_y)
+        img.save(os.path.join('../screenshots', name + '.png'))
+        img = Image.open(os.path.join('../screenshots', name + '.png'))
+        number = pytesseract.image_to_string(
+            img, lang="chi_sim", config='--psm 7 --oem 0 -c tessedit_char_whitelist=0123456789')
+        try:  # 避免数字错乱以及空
+            number = int(number)
+            print(number)
+            # 若一切正常，在此退出
+            # if name == 'HP' and number == 31:   # 单个体择优
+            # return 6
+            if number == min_limit or number == min_limit + 1:
+                return 1
+            return 0
+        except Exception:
+            count += 1  # 若有异常，重复5次未果则退出
+    print('not captured, skip this circle')
+    return -1
 
 
 def work_3(A, HP, WG, WF, SD, TG, TF):
@@ -156,23 +160,32 @@ def work_3(A, HP, WG, WF, SD, TG, TF):
 
     count = 0
 
-    requirement = {'HP': [30, HP], 'WG': [25, WG], 'WF': [30, WF]}
+    requirement = {'HP': [31, HP], 'WG': [31, WG], 'WF': [31, WF]}
     for item in requirement:
         count += numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                requirement[item][1][1][0], requirement[item][1][1][1])
     mouseClick(*A)
     time.sleep(0.3)
 
-    requirement = {'SD': [30, SD], 'TG': [30, TG], 'TF': [30, TF]}
+    requirement = {'SD': [31, SD], 'TG': [30, TG], 'TF': [30, TF]}
     for item in requirement:
         count += numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                requirement[item][1][1][0], requirement[item][1][1][1])
 
     time.sleep(0.3)
 
-    if count == 6:
+    if count >= 5:  # 6v
         return True
     return False
+
+
+def work_4(Load, Save):
+    '''重新载入，隔时间保存
+    '''
+    mouseClick(*Load)
+    time.sleep(2)
+
+    mouseClick(*Save)
 
 
 def main_worker(pos_data):
@@ -208,6 +221,7 @@ def main_worker(pos_data):
                 mouseClick(*Save)  # 每20轮进行一次存档
                 time.sleep(0.3)
                 exit()
+        work_4(Load, Save)
 
 
 def main():

@@ -22,13 +22,13 @@ def grab_screen(x1, y1, x2, y2):
 if __name__ == '__main__':
     import pytesseract
 
-    # im = grab_screen(318, 475, 357, 516) HP
+    im = grab_screen(321, 492, 358, 533)
     # im = grab_screen(355, 475, 470, 516) WG
     # im = grab_screen(468, 475, 581, 516) WF
-    # im = grab_screen(278, 475, 393, 516) SD
-    # im = grab_screen(394, 475, 505, 516) TG
+    # im = grab_screen(278, 492, 393, 532) SD
+    # im = grab_screen(394, 492, 505, 532)
     # im = grab_screen(507, 475, 616, 516) TF
-    im = grab_screen(507, 475, 616, 516)
+    # im = grab_screen(507, 475, 616, 516)
 
     im.save('image.png')
     img = Image.open('image.png')

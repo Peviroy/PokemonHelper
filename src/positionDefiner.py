@@ -14,7 +14,7 @@ def getPosData():
         return data
     else:  # not ready
         button_pos_label = ['A', 'B', 'GoDown',
-                            'GoRight', 'Load', 'Save', 'Home', 'Speed']
+                            'GoRight', 'GoLeft', 'GoUp', 'Load', 'Save', 'Home', 'Speed']
         number_area_label = ['HP', '_HP2', 'WG', '_WG2', 'WF',
                              '_WF2', 'SD', '_SD2', 'TG', '_TG2', 'TF', '_TF2']
 
