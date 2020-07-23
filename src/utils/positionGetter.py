@@ -1,4 +1,3 @@
-import os
 from pymouse import PyMouseEvent
 
 
@@ -9,37 +8,35 @@ class PositionClicker(PyMouseEvent):
         PyMouseEvent.__init__(self)
         self.messages = messages
         self.pos = 0
+        self.lock = False
 
     def click(self, x, y, button, press):
-        if self.messages[0] != '':
-            if self.pos >= len(self.messages):
-                self.stop()
+        '''click event
+        '''
+        if self.lock is False:
+            self.lock = True
+            if self.messages[0] != '':  # message helper mode
+                if self.pos >= len(self.messages):
+                    self.stop()
 
-            if button == 1:
-                if press:
-                    print(self.messages[self.pos], x, y)
-                    self.pos += 1
-            else:  # Exit if any other mouse button used
-                self.stop()
-        else:
-            if button == 1:
-                if press:
-                    print(x, y)
-            else:  # Exit if any other mouse button used
-                self.stop()
-
-
-class mouseInterupter(PyMouseEvent):
-    def __init__(self, messages=['']):
-        PyMouseEvent.__init__(self)
-
-    def click(self, x, y, button, press):
-        if button == 2:
-            if press:
-                self.stop()
-                os._exit(0)
+                if button == 1:
+                    if press:
+                        choice = input(
+                            'Mark for {0}? y/N'.format(self.messages[self.pos]))
+                        if choice in ['y', 'Y']:
+                            print(self.messages[self.pos], x, y)
+                            self.pos += 1
+                else:
+                    self.stop()
+            else:  # no message helper
+                if button == 1:
+                    if press:
+                        print(x, y)
+                else:
+                    self.stop()
+            self.lock = False
 
 
 if __name__ == "__main__":
-    pC = PositionClicker()
+    pC = PositionClicker(['HO', 'HI', 'HP'])
     pC.run()
