@@ -6,14 +6,11 @@ sys.path.append(os.path.abspath("."))
 
 import time
 import pytesseract
-from pymouse import PyMouse
+import pyautogui
 from PIL import Image
 
 from positionDefiner import getPosData
 from utils.imageGrab import grab_screen
-
-POSITION_FILE = 'criPosition.json'
-MOUSE = PyMouse()
 
 
 def mouseClick(pos_x, pos_y, press_time=0.2):
@@ -23,9 +20,9 @@ def mouseClick(pos_x, pos_y, press_time=0.2):
 def mousePress(press_time, pos_x, pos_y):
     '''press mouse button for <press_time> seconds
     '''
-    MOUSE.press(pos_x, pos_y)
+    pyautogui.mouseDown(pos_x, pos_y)
     time.sleep(press_time)
-    MOUSE.release(pos_x, pos_y)
+    pyautogui.mouseUp(pos_x, pos_y)
 
 
 def work_1(Load, A, GoDown, GoRight):
@@ -59,7 +56,7 @@ def work_1(Load, A, GoDown, GoRight):
         mouseClick(*A)
         time.sleep(0.1)
 
-    mousePress(0.6, *GoRight)
+    mousePress(0.7, *GoRight)
 
 
 def work_2(A, B, Home, GoDown, GoRight, Speed):
@@ -223,7 +220,7 @@ def main_worker(pos_data):
 
 
 def main():
-    pos_data = getPosData()
+    pos_data = getPosData(POSITION_FILE='criPosition.json')
     main_worker(pos_data)
 
 
