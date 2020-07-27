@@ -2,7 +2,7 @@ from utils.jsonHandler import json_getter, json_saver, json_transformer
 from utils.positionGetter import PositionGetter
 
 
-def getPosData(POSITION_FILE):
+def getPosData(POSITION_FILE, rewrite=False):
     try:
         with open(POSITION_FILE, 'r') as file_p:
             data = json_getter(file_p)
@@ -11,7 +11,7 @@ def getPosData(POSITION_FILE):
         open(POSITION_FILE, 'x')
         data = None
 
-    if data is not None:  # already
+    if data is not None and rewrite is False:  # already
         return data
     else:  # not ready
         print('|---------Collect button position-----------|')
