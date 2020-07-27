@@ -11,8 +11,6 @@ from PIL import Image
 
 from positionDefiner import getPosData
 from utils.imageGrab import grab_screen
-from utils.positionGetter import mouseInterupter
-
 
 POSITION_FILE = 'criPosition.json'
 MOUSE = PyMouse()

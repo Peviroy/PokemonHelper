@@ -1,53 +1,31 @@
-from jsonHandler import json_getter, json_saver, json_transformer
-from utils.positionGetter import PositionClicker
+from utils.jsonHandler import json_getter, json_saver, json_transformer
+from utils.positionGetter import PositionGetter
 
 
-POSITION_FILE = 'criPosition.json'
+def getPosData(POSITION_FILE):
+    try:
+        with open(POSITION_FILE, 'r') as file_p:
+            data = json_getter(file_p)
+    except FileNotFoundError:
+        print('Not exist position file, trying to create one')
+        open(POSITION_FILE, 'x')
+        data = None
 
-# 1028 524
-
-
-def getPosData():
-    with open(POSITION_FILE, 'r') as file_p:
-        data = json_getter(file_p)
     if data is not None:  # already
         return data
     else:  # not ready
+        print('|---------Collect button position-----------|')
         button_pos_label = ['A', 'B', 'GoDown',
-                            'GoRight', 'GoLeft', 'GoUp', 'Load', 'Save', 'Home', 'Speed']
-        number_area_label = ['HP', '_HP2', 'WG', '_WG2', 'WF',
-                             '_WF2', 'SD', '_SD2', 'TG', '_TG2', 'TF', '_TF2']
+                            'GoRight', 'Load', 'Save', 'Home', 'Speed']
+        button_pos = PositionGetter(button_pos_label, mode='BUTTON').run()
 
-        labels = []
-        labels.extend(button_pos_label)
-        labels.extend(number_area_label)
+        print('|---------Collect area position-------------|')
+        area_pos_label = ['HP', 'WG', 'WF',
+                          'SD', 'TG', 'TF']
+        area_pos = PositionGetter(area_pos_label, mode='AREA').run()
 
-        PositionClicker(labels).run()
-
-        button_pos = []
-        print('input format: <pos_x> <pos_y>')
-        for name in button_pos_label:
-            raw_pos = input(name + '> ')
-            try:
-                pos1, pos2 = raw_pos.split(' ')
-                button_pos.append((int(pos1), int(pos2)))
-            except ValueError:
-                print('Not valid input format!')
-
-        number_area = []
-        print('input example: <pos1_x> <pos1_y> <pos2_x> <pos2_y>')
-        for name in number_area_label:
-            if name[0] == '_':
-                continue
-            raw_pos = input(name + '> ')
-            try:
-                pos1, pos2, pos3, pos4 = raw_pos.split(' ')
-                number_area.append(
-                    [(int(pos1), int(pos2)), (int(pos3), int(pos4))])
-            except ValueError:
-                print('Not valid input format!')
-
-        data = json_transformer(button_pos, number_area)
+        data = json_transformer(button_pos, area_pos)
+        print(data)
         choice = input('Save position data to local? [T/F]')
 
         if choice == 'T':
@@ -59,4 +37,4 @@ def getPosData():
 
 
 if __name__ == "__main__":
-    getPosData()
+    getPosData(POSITION_FILE='criPosition.json')
