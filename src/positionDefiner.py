@@ -92,6 +92,8 @@ def getPosData(POSITION_FILE, addon='None', rewrite=False):
         number_pos = getNumberPos(data)
         flash_pos = getFlashPos(data)
 
+        if button_pos is not None and number_pos is not None and flash_pos is not None:
+            return data
         if button_pos is None:
             button_pos = setButtonPos()
         if addon == 'Indivalue' and number_pos is None:
