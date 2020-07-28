@@ -63,7 +63,7 @@ class PositionGetter():
         '''
         positions = []  # record | return
         for position_name in self.position_names:
-            if self.mode == 'BUTTON':
+            if self.mode == 'BUTTON' or self.mode == 'FLASH':
                 pyautogui.alert(
                     'Place mouse for "{0}", and key down ENTER'.format(position_name))
                 currentMouseX, currentMouseY = pyautogui.position()

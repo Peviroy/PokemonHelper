@@ -25,7 +25,7 @@ import json
 '''
 
 
-def json_transformer(button_pos: dict, number_area: dict):
+def json_transformer(button_pos, number_area=None, flash_pos=None):
     '''combine button_pos and number_area into one dict
     Example:
     --------
@@ -42,7 +42,8 @@ def json_transformer(button_pos: dict, number_area: dict):
     '''
     obj = {
         "button": button_pos,
-        "number": number_area
+        "number": number_area,
+        "flash": flash_pos
     }
     return obj
 

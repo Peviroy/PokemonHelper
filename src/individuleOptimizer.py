@@ -35,9 +35,10 @@ class individuleOptimizer():
                 if individule value doesnt meet the standard, then continue loop(with save and load)
     '''
 
-    def __init__(self, pos_data: dict, how_many_v=6):
+    def __init__(self, pos_data: dict, how_many_v=6, egg_pos=1):
         self.pos_data = pos_data
         self.how_mamy_v = how_many_v
+        self.egg_pos = egg_pos
 
     def _step1(self):
         '''
@@ -117,8 +118,9 @@ class individuleOptimizer():
         time.sleep(0.3)
 
         # select the egg
-        mouseClick(*GoDown)
-        time.sleep(0.3)
+        for i in range(self.egg_pos):
+            mouseClick(*GoDown)
+            time.sleep(0.3)
 
         # change game acceleration
         mouseClick(*Speed)
@@ -184,14 +186,14 @@ class individuleOptimizer():
 
         count = 0
 
-        requirement = {'HP': [31, HP], 'WG': [31, WG], 'WF': [31, WF]}
+        requirement = {'HP': [30, HP], 'WG': [30, WG], 'WF': [30, WF]}
         for item in requirement:
             count += self._numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                          requirement[item][1][1][0], requirement[item][1][1][1])
         mouseClick(*A)
         time.sleep(0.3)
 
-        requirement = {'SD': [31, SD], 'TG': [31, TG], 'TF': [31, TF]}
+        requirement = {'SD': [31, SD], 'TG': [30, TG], 'TF': [30, TF]}
         for item in requirement:
             count += self._numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                          requirement[item][1][1][0], requirement[item][1][1][1])
@@ -206,12 +208,13 @@ class individuleOptimizer():
         SAVE = self.pos_data['button']['Save']
         LOAD = self.pos_data['button']['Load']
 
+        mouseClick(*SAVE)  # save archive for every 20 circles
+        time.sleep(0.1)
         epoch = 1
         while True:
-            mouseClick(*SAVE)  # save archive for every 20 circles
-            time.sleep(0.1)
             for i in range(20):
                 print('|-------------EPOCH:{0}--------------|'.format(epoch))
+                epoch += 1
 
                 mouseClick(*LOAD)
                 time.sleep(0.1)
@@ -227,4 +230,3 @@ class individuleOptimizer():
             mouseClick(*LOAD)  # load again; change to another start time
             time.sleep(2)
             mouseClick(*SAVE)
-            epoch += 1
