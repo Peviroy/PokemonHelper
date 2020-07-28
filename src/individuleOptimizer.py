@@ -205,6 +205,9 @@ class individuleOptimizer():
         return False
 
     def run(self):
+        pyautogui.alert(
+            'Script is about to start. Adjust the speed to 16 times and face EggGrandpa')
+
         SAVE = self.pos_data['button']['Save']
         LOAD = self.pos_data['button']['Load']
 
