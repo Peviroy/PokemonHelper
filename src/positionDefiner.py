@@ -65,7 +65,7 @@ def getPosData(POSITION_FILE, addon='None', rewrite=False):
         open(POSITION_FILE, 'x')
         data = None
 
-    if data is None or rewrite is True:  # override context
+    if data is None and rewrite is True:  # override context
         button_pos = None
         number_pos = None
         flash_pos = None
@@ -87,19 +87,17 @@ def getPosData(POSITION_FILE, addon='None', rewrite=False):
             with open(POSITION_FILE, 'w') as file_p:
                 json_saver(file_p, data)
         return data
-    elif data is not None:  # complete the rest
+    elif data is not None and rewrite is True:  # complete the rest
         button_pos = getButtonPos(data)
         number_pos = getNumberPos(data)
         flash_pos = getFlashPos(data)
 
-        if button_pos is not None and number_pos is not None and flash_pos is not None:
-            return data
         if button_pos is None:
             button_pos = setButtonPos()
-        if addon == 'Indivalue' and number_pos is None:
+        if addon == 'Indivalue':
             number_pos = setNumberPos()
             flash_pos = getFlashPos(data)
-        elif addon == 'Flash' and flash_pos is None:
+        elif addon == 'Flash':
             flash_pos = setFlashPos()
             number_pos = getNumberPos(data)
         data = json_transformer(
