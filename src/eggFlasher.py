@@ -83,7 +83,7 @@ class eggFlasher():
         return False
 
     def run(self):
-        alert('Script is about to start. Adjust the speed to 16 times and save archive at the moment of "hamph"')
+        alert('Script is about to start. Adjust the speed to more than 10 times and save archive at the moment of "hamph"')
         time.sleep(5)
 
         SAVE = self.pos_data['button']['Save']
