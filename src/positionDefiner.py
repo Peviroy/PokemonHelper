@@ -87,7 +87,7 @@ def getPosData(POSITION_FILE, addon='None', rewrite=False):
             with open(POSITION_FILE, 'w') as file_p:
                 json_saver(file_p, data)
         return data
-    elif data is not None and rewrite is True:  # complete the rest
+    elif data is not None and addon is not None:  # complete the rest
         button_pos = getButtonPos(data)
         number_pos = getNumberPos(data)
         flash_pos = getFlashPos(data)

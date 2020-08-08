@@ -31,7 +31,7 @@ parser.add_argument('-P', default='mobile', type=str,
                     dest='platform')
 
 
-subparser_mode.add_parser(
+subparser_posDefiner = subparser_mode.add_parser(
     'posDefiner', help="helper for define critical position and keyboard")
 subparser_mode.add_parser(
     'eggFlasher', help="helper for get flash pokemon")
@@ -46,6 +46,10 @@ subparser_indiValue.add_argument('-E', default=1, type=int,
                                  help='[indiValue]the position of egg at right column of pokemon bag',
                                  metavar='--egg_pos',
                                  dest='egg_pos')
+subparser_posDefiner.add_argument('-A', default=None, type=str,
+                                  help='[posDefiner]define what. default is for pos, "Flash" for flash point, "Indivalue" for indivalue area',
+                                  metavar='--addon',
+                                  dest='addon')
 
 
 def main():
@@ -62,11 +66,11 @@ def main():
     mode = args.mode
     if mode == 'indiValue':
         individuleOptimizer(getPosData(
-            args.pos_file, addon='Indivalue'), how_many_v=args.v, egg_pos=args.egg_pos, platform=args.platform).run()
+            args.pos_file), how_many_v=args.v, egg_pos=args.egg_pos, platform=args.platform).run()
     elif mode == 'posDefiner':
-        getPosData(args.pos_file, rewrite=True, addon='Flash')
+        getPosData(args.pos_file, rewrite=True, addon=args.addon)
     elif mode == 'eggFlasher':
-        eggFlasher(getPosData(args.pos_file, addon='Flash'),
+        eggFlasher(getPosData(args.pos_file),
                    platform=args.platform).run()
 
 
