@@ -1,32 +1,10 @@
 import os
 import time
 import pytesseract
-import pyautogui
 from PIL import Image
 
 from utils.imageGrab import grab_screen
-
-
-def mouseClick(pos_x, pos_y, press_time=0.2):
-    mousePress(press_time, pos_x, pos_y)
-
-
-def mousePress(press_time, pos_x, pos_y):
-    '''press mouse button for <press_time> seconds
-    '''
-    pyautogui.mouseDown(pos_x, pos_y)
-    time.sleep(press_time)
-    pyautogui.mouseUp(pos_x, pos_y)
-
-
-def keyClick(key, press_time=0.2):
-    keyPress(press_time, key)
-
-
-def keyPress(press_time, key):
-    pyautogui.keyDown(key)
-    time.sleep(press_time)
-    pyautogui.keyUp(key)
+from utils.autoKeyMouse import keyClick, keyPress, mouseClick, mousePress, alert
 
 
 class individuleOptimizer():
@@ -73,21 +51,21 @@ class individuleOptimizer():
         # A click for eight times
         for i in range(8):
             self.Click(*A)
-            time.sleep(0.7)
+            time.sleep(0.6)
 
         # GoDown Press
-        self.Press(0.15, *GoDown)
-        for i in range(10):  # avoid interphone
+        self.Press(0.1, *GoDown)
+        for i in range(8):  # avoid interphone
             self.Click(*A)
-            time.sleep(0.1)
-        self.Press(0.15, *GoDown)
+            time.sleep(0.05)
+        self.Press(0.1, *GoDown)
 
         # GoRight Press
-        self.Press(1, *GoRight)
-        for i in range(10):   # avoid interphone
+        self.Press(0.2, *GoRight)
+        for i in range(8):   # avoid interphone
             self.Click(*A)
-            time.sleep(0.1)
-        self.Press(2, *GoRight)
+            time.sleep(0.05)
+        self.Press(1.3, *GoRight)
 
     def _step2(self):
         '''
@@ -113,48 +91,48 @@ class individuleOptimizer():
 
         # into home page
         self.Click(*Home)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # into pokemon bag
         self.Click(*A)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # into pokemon operation page
         self.Click(*A)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # change game acceleration into normal
         self.Click(*Speed)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # select the exchange function
         self.Click(*GoDown)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # into position exchanging mode
         self.Click(*A)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # select the egg
         for i in range(self.egg_pos):
             self.Click(*GoDown)
-            time.sleep(0.3)
+            time.sleep(0.2)
 
         # change game acceleration
         self.Click(*Speed)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # finish position exchange
         self.Click(*A)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # exit pokemon bag
         self.Click(*B)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
         # exit home page
         self.Click(*B)
-        time.sleep(0.3)
+        time.sleep(0.2)
 
     @staticmethod
     def _numberCapture(name, min_limit, pos1_x, pos1_y, pos2_x, pos2_y):
@@ -172,14 +150,14 @@ class individuleOptimizer():
                 print(number)
                 # if name == 'HP' and number == 31:   # 单个体择优
                 # return 6
-                if number == min_limit or number == min_limit + 1:
+                if number >= min_limit:
                     return 1
                 return 0
             except Exception:
                 continue
 
         print('not captured, skip this circle')
-        return -1
+        return 0
 
     def _step3(self):
         '''
@@ -211,7 +189,7 @@ class individuleOptimizer():
         self.Click(*A)
         time.sleep(0.3)
 
-        requirement = {'SD': [31, SD], 'TG': [30, TG], 'TF': [30, TF]}
+        requirement = {'SD': [31, SD], 'TG': [0, TG], 'TF': [30, TF]}
         for item in requirement:
             count += self._numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                          requirement[item][1][1][0], requirement[item][1][1][1])
@@ -223,8 +201,7 @@ class individuleOptimizer():
         return False
 
     def run(self):
-        pyautogui.alert(
-            'Script is about to start. Adjust the speed to 16 times and face EggGrandpa')
+        alert('Script is about to start. Adjust the speed to 16 times and face EggGrandpa')
         time.sleep(5)
         SAVE = self.pos_data['button']['Save']
         LOAD = self.pos_data['button']['Load']
