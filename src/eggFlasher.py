@@ -1,20 +1,8 @@
-import pyautogui
 import random
 import time
 
 from utils.imageGrab import grab_screen
-
-
-def mouseClick(pos_x, pos_y, press_time=0.2):
-    mousePress(press_time, pos_x, pos_y)
-
-
-def mousePress(press_time, pos_x, pos_y):
-    '''press mouse button for <press_time> seconds
-    '''
-    pyautogui.mouseDown(pos_x, pos_y)
-    time.sleep(press_time)
-    pyautogui.mouseUp(pos_x, pos_y)
+from utils.autoKeyMouse import mouseClick, mousePress, keyClick, keyPress, alert
 
 
 def getPixle(pos_x, pos_y):
@@ -49,8 +37,16 @@ class eggFlasher():
                 if not flash, then continue loop(with save and load)
     '''
 
-    def __init__(self, pos_data):
+    def __init__(self, pos_data, platform):
         self.pos_data = pos_data
+        if platform == 'mobile':
+            self.Click = mouseClick
+            self.Press = mousePress
+        elif platform == 'pc':
+            self.Click = keyClick
+            self.Press = keyPress
+        else:
+            raise Exception('No such platform')
 
     def _step1(self):
         '''
@@ -61,7 +57,7 @@ class eggFlasher():
         A = self.pos_data['button']['A']
         FLASH_POINT = self.pos_data['flash']['Flash']
 
-        mouseClick(*A)
+        self.Click(*A)
         time.sleep(0.9)
 
         return getPixle(*FLASH_POINT)
@@ -76,24 +72,24 @@ class eggFlasher():
         A = self.pos_data['button']['A']
         FLASH_POINT = self.pos_data['flash']['Flash']
 
-        mouseClick(*A)
-        time.sleep(0.9)
+        self.Click(*A)
+        time.sleep(1.4)
         this_pixle = getPixle(*FLASH_POINT)
         print('A:', pixle)
         print('B:', this_pixle)
 
-        if abs(pixle[0] - this_pixle[0]) >= 10 or abs(pixle[1] - this_pixle[1]) >= 10 or abs(pixle[2] - this_pixle[2]) >= 10:
+        if abs(pixle[0] - this_pixle[0]) >= 3 or abs(pixle[1] - this_pixle[1]) >= 3 or abs(pixle[2] - this_pixle[2]) >= 3:
             return True
         return False
 
     def run(self):
-        pyautogui.alert(
-            'Script is about to start. Adjust the speed to 16 times and save archive at the moment of "hamph"')
+        alert('Script is about to start. Adjust the speed to 16 times and save archive at the moment of "hamph"')
+        time.sleep(5)
 
         SAVE = self.pos_data['button']['Save']
         LOAD = self.pos_data['button']['Load']
 
-        mouseClick(*SAVE)  # save archive for every 20 circles
+        self.Click(*SAVE)  # save archive for every 20 circles
         time.sleep(0.2)
         non_flash_pixle = self._step1()
         epoch = 1
@@ -102,15 +98,15 @@ class eggFlasher():
                 print('|-------------EPOCH:{0}--------------|'.format(epoch))
                 epoch += 1
 
-                mouseClick(*LOAD)  # load
+                self.Click(*LOAD)  # load
                 time.sleep(int((random.random() * 51 + 100) / 1000))   # delay
 
                 if self._step2(non_flash_pixle) is True:  # compare pixle
-                    mouseClick(*SAVE)
+                    self.Click(*SAVE)
                     time.sleep(0.1)
                     print('Egg flashed !!! ')
                     exit()
 
-            mouseClick(*LOAD)  # load again; change to another start time
+            self.Click(*LOAD)  # load again; change to another start time
             time.sleep(2)
-            mouseClick(*SAVE)
+            self.Click(*SAVE)
