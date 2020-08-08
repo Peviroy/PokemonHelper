@@ -64,7 +64,7 @@ def main():
         individuleOptimizer(getPosData(
             args.pos_file, addon='Indivalue'), how_many_v=args.v, egg_pos=args.egg_pos, platform=args.platform).run()
     elif mode == 'posDefiner':
-        getPosData(args.pos_file, rewrite=True, addon='Indivalue')
+        getPosData(args.pos_file, rewrite=True, addon='Flash')
     elif mode == 'eggFlasher':
         eggFlasher(getPosData(args.pos_file, addon='Flash'),
                    platform=args.platform).run()

@@ -65,7 +65,7 @@ def getPosData(POSITION_FILE, addon='None', rewrite=False):
         open(POSITION_FILE, 'x')
         data = None
 
-    if data is None and rewrite is True:  # override context
+    if data is None:  # override context
         button_pos = None
         number_pos = None
         flash_pos = None
