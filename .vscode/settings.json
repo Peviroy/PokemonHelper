@@ -8,6 +8,9 @@
 		"--verbose"
 	],
 	"python.linting.enabled": true,
-	"python.pythonPath": "/usr/bin/python",
-	"python.autoComplete.extraPaths": ["src", "./src"]
+	"python.autoComplete.extraPaths": [
+		"src",
+		"./src"
+	],
+	"python.pythonPath": "/home/penguinviceroy/miniconda3/bin/python"
 }
