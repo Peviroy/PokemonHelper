@@ -1,3 +1,10 @@
+"""
+@Author: peviroy
+@Last Modified by: peviroy
+@Last Modified time: 2020-09-21
+
+@Note: The screenshot function is based on X11, using cpp lib "prtscn.so"
+"""
 import ctypes
 import os
 from PIL import Image
@@ -17,23 +24,3 @@ def grab_screen(x1, y1, x2, y2):
 
     grab.getScreen(x1, y1, w, h, result)
     return Image.frombuffer('RGB', (w, h), result, 'raw', 'RGB', 0, 1)
-
-
-if __name__ == '__main__':
-    import pytesseract
-
-    im = grab_screen(321, 492, 358, 533)
-    # im = grab_screen(355, 475, 470, 516) WG
-    # im = grab_screen(468, 475, 581, 516) WF
-    # im = grab_screen(278, 492, 393, 532) SD
-    # im = grab_screen(394, 492, 505, 532)
-    # im = grab_screen(507, 475, 616, 516) TF
-    # im = grab_screen(507, 475, 616, 516)
-
-    im.save('image.png')
-    img = Image.open('image.png')
-    img.show()
-
-    text = pytesseract.image_to_string(
-        img, lang="chi_sim", config='--psm 7 --oem 0 -c tessedit_char_whitelist=0123456789')
-    print(text)
