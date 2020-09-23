@@ -1,3 +1,10 @@
+"""
+@Author: peviroy
+@Last Modified by: peviroy
+@Last Modified time: 2020-09-23
+
+@Note: Script for choosing egg with desired Individule Values
+"""
 import os
 import time
 import pytesseract

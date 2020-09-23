@@ -1,3 +1,10 @@
+"""
+@Author: peviroy
+@Last Modified by: peviroy
+@Last Modified time: 2020-09-23
+
+@Note: Script for defining key areas or keyboard map
+"""
 from utils.jsonHandler import json_getter, json_saver, json_transformer
 from utils.positionGetter import PositionGetter
 
