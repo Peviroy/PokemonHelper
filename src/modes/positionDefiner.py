@@ -1,125 +1,123 @@
 """
 @Author: peviroy
 @Last Modified by: peviroy
-@Last Modified time: 2020-09-23
-
+@Last Modified time: 2020-09-24
 @Note: Script for defining key areas or keyboard map
 """
 from utils.jsonHandler import json_getter, json_saver, json_transformer
 from utils.positionGetter import PositionGetter
 
 
-def getButtonPos(data):
-    try:
-        button_data = data['button']
-    except Exception:
-        button_data = None
-    return button_data
-
-
-def setButtonPos():
-    print('|---------Collect button position-----------|')
-    button_pos_label = ['A', 'B', 'GoDown',
-                        'GoRight', 'Load', 'Save', 'Home', 'Speed']
-    button_pos = PositionGetter(button_pos_label, mode='BUTTON').run()
-    return button_pos
-
-
-def getFlashPos(data):
-    '''Helper of getPosData
+class PostionDefiner():
     '''
-    try:
-        flash_data = data['flash']
-    except Exception:
-        flash_data = None
-    return flash_data
-
-
-def setFlashPos():
-    print('|---------Collect button position-----------|')
-    button_pos_label = ['Flash']
-    button_pos = PositionGetter(button_pos_label, mode='FLASH').run()
-    return button_pos
-
-
-def getNumberPos(data):
-    '''Helper of getPosData
+    Constructor of positionData.json, build step by step;
+    1. button_data is initially constructed
+    2. flash, indivalue can be construcetd via 'addon' mode
     '''
-    try:
-        number_data = data['number']
-    except Exception:
-        number_data = None
-    return number_data
 
+    def __init__(self, position_file: str):
+        self.position_file = position_file
+        self.data = self._load_data(position_file) or {}  # {} for default
 
-def setNumberPos():
-    print('|---------Collect number position-------------|')
-    area_pos_label = ['HP', 'WG', 'WF',
-                      'SD', 'TG', 'TF']
-    area_pos = PositionGetter(area_pos_label, mode='AREA').run()
-    return area_pos
+    def run(self, platform_name: str, addon: str = '', rewrite: bool = False) -> dict:
+        platforms = ['desktop', 'mobile']
+        assert platform_name in platforms
+        self.platfroom_name = platform_name
 
+        # IF, get data or construct data
+        if self.data.get(self.platfroom_name, {}) != {} and addon == '' and rewrite is False:
+            return self.data[platform_name]
+        elif self.data.get(self.platfroom_name, {}) == {} or rewrite is True:  # make data
+            button = None
+            indivalue = None
+            flash = None
+        else:  # data is not None and addon is not None  | addon mode
+            button = self._get_attr_fromData('BUTTON')
+            indivalue = self._get_attr_fromData('INDIVALUE')
+            flash = self._get_attr_fromData('FLASH')
 
-def getPosData(POSITION_FILE, addon='None', rewrite=False):
-    '''
-    :param addon :except for main button, if 'Flash', Flash_point is required; if 'Indivalue', HP, TF and others are required
-    '''
-    try:
-        with open(POSITION_FILE, 'r') as file_p:
-            data = json_getter(file_p)
-    except FileNotFoundError:
-        print('Not exist position file, trying to create one')
-        open(POSITION_FILE, 'x')
+        if button is None:
+            button = self._set_attr_value('BUTTON')
+        if addon.lower() == 'indivalue':
+            indivalue = self._set_attr_value('INDIVALUE')
+        elif addon.lower() == 'flash':
+            flash = self._set_attr_value('FLASH')
+
+        # FORMAT data
+        platform_data = json_transformer(
+            platform_name, button_pos=button, indivalue_area=indivalue, flash_pos=flash)
+
+        # Save data or not
+        while True:
+            choice = input('Save position data to local? [T/f]')
+            if choice.lower() == 't' or choice == '':  # save
+                # get another part of data, for data consists of 'mobile' and 'desktop'
+                platforms.remove(platform_name)
+                other_platform_name = platforms[0]
+                other_platform_data = self.data.get(other_platform_name, {})
+                new_data = {}
+                new_data.update(platform_data)
+                print(new_data)
+                new_data.update({other_platform_name: other_platform_data})
+                print(new_data)
+                print('Saving--------')
+                with open(self.position_file, 'w') as file_p:
+                    json_saver(file_p, new_data)
+                break
+            elif choice.lower() == 'f':  # not
+                break
+            else:
+                continue
+
+        # Last, only specified platform data is returned
+        print('New updated data:\n', new_data)
+        return platform_data
+
+    def _load_data(self, position_file):
         data = None
-
-    if data is None:  # override context
-        button_pos = None
-        number_pos = None
-        flash_pos = None
-
-        button_pos = setButtonPos()
-        if addon == 'Indivalue':
-            number_pos = setNumberPos()
-            flash_pos = getFlashPos(data)
-        elif addon == 'Flash':
-            flash_pos = setFlashPos()
-            number_pos = getNumberPos(data)
-        data = json_transformer(
-            button_pos, number_area=number_pos, flash_pos=flash_pos)
-        print(data)
-
-        choice = input('Save position data to local? [T/F]')
-        if choice == 'T':
-            print('Saving--------')
-            with open(POSITION_FILE, 'w') as file_p:
-                json_saver(file_p, data)
-        return data
-    elif data is not None and addon is not None:  # complete the rest
-        button_pos = getButtonPos(data)
-        number_pos = getNumberPos(data)
-        flash_pos = getFlashPos(data)
-
-        if button_pos is None:
-            button_pos = setButtonPos()
-        if addon == 'Indivalue':
-            number_pos = setNumberPos()
-            flash_pos = getFlashPos(data)
-        elif addon == 'Flash':
-            flash_pos = setFlashPos()
-            number_pos = getNumberPos(data)
-        data = json_transformer(
-            button_pos, number_area=number_pos, flash_pos=flash_pos)
-        print(data)
-
-        choice = input('Save position data to local? [T/F]')
-        if choice == 'T':
-            print('Saving--------')
-            with open(POSITION_FILE, 'w') as file_p:
-                json_saver(file_p, data)
-        return data
-    else:  # ready: data or not rewrite
+        try:
+            with open(position_file, 'r') as file_p:
+                data = json_getter(file_p)
+        except FileNotFoundError:
+            print('Not exist position file, trying to create one')
+            with open(position_file, 'x'):
+                pass
         return data
 
+    def _get_attr_fromData(self, attr_name: str) -> dict:
+        '''
+        load attr value from self.data
+        '''
+        assert attr_name.lower() in ['indivalue', 'flash', 'button']
+        try:
+            attr_data = self.data[self.platfroom_name][attr_name.lower()]
+        except Exception:
+            attr_data = None
+        return attr_data
 
-if __name__ == "__main__":
-    getPosData(POSITION_FILE='criPosition.json', addon='Indivalue')
+    def _set_attr_value(self, attr_name: str) -> dict:
+        '''
+        set attr value using utils.positionGetter; the format of deffirent attr is determined
+        '''
+        assert attr_name.lower() in ['indivalue', 'flash', 'button']
+        attr_value = {}
+        if attr_name.lower() == 'button':
+            print('|---------Collect button position-------------|')
+            button_label = ['A', 'B', 'GoDown',
+                            'GoRight', 'Load', 'Save', 'Home', 'Speed']
+            posGetter = PositionGetter('POINT')
+            attr_value = posGetter(button_label)
+
+        elif attr_name.lower() == 'flash':
+            print('|---------Collect flash position--------------|')
+            flash_label = ['Flash']
+            posGetter = PositionGetter('POINT')
+            attr_value = posGetter(flash_label)
+        else:  # indivalue
+            print('|---------Collect indivalue position----------|')
+            indivalue_label = ['HP', 'WG', 'WF',
+                               'SD', 'TG', 'TF']
+            posGetter = PositionGetter('AREA')
+            attr_value = posGetter(indivalue_label)
+
+        return attr_value
