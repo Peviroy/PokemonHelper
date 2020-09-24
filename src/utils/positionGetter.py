@@ -22,7 +22,7 @@ class PositionGetter():
         '''
         self.mode = mode
 
-    def __call__(self, position_names: list):
+    def __call__(self, position_names: list) -> dict:
         '''
         :param [position_names]-- str list, 1-D
         '''

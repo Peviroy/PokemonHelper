@@ -22,7 +22,7 @@ class TestJsonHandlerInstance:
         '''
         Test for transform function of json_transformer
         '''
-        platform_name = 'pc'
+        platform_name = 'desktop'
         button_pos = {'A': [1, 1]}
         indivalue = {'HP': [2, 2]}
         flash = {'FLASH': [3, 3]}
@@ -37,7 +37,7 @@ class TestJsonHandlerInstance:
         '''
         with open(self.testedConfigFile_1, 'r') as file_p:  # flag is False
             data = json_getter(file_p)
-            assert data.get('pc') is not None
+            assert data.get('desktop') is not None
             assert data.get('mobile') is not None
 
         with open(self.testedConfigFile_2, 'r') as file_p:  # flag is False

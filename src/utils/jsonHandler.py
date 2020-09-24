@@ -7,11 +7,11 @@ import json
 
 '''
     JSON FORMAT:
-    Even if data derived into 'pc' and 'mobile', jsonHandler only process one 'flag' and 'data'
+    Even if data derived into 'desktop' and 'mobile', jsonHandler only process one 'flag' and 'data'
     {
         "flag":
         "data":{
-            "pc":{
+            "desktop":{
                 "button": {
                     "A": [<str| button name>],
                 },

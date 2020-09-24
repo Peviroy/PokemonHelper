@@ -1,7 +1,7 @@
 {
 	"flag": false,
 	"data": {
-		"pc": {
+		"desktop": {
 			"button": {
 				"A": ["j"],
 				"B": ["k"],

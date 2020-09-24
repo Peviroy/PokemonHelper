@@ -59,17 +59,17 @@
    python src/main.py -h
    ```
 
-   <img src="screenshots/script_help.png">
+       <img src="screenshots/script_help.png">
 
-3. Set 'criPosition*.json‘之flag为false
+3. Set 'criPosition\*.json‘之 flag 为 false
 
-4. 根据当前平台选择-P pc或者-P mobile，而后输入`python src/main.py posDefiner`来确定按键映射关系。
+4. 根据当前平台选择-P desktop 或者-P mobile，而后输入`python src/main.py posDefiner`来确定按键映射关系。
 
-   <img src="screenshots/script_posDefiner.png">
+ <img src="screenshots/script_posDefiner.png">
 
-5. 选择indiValue或者eggFlasher之前，使用`python src/main.py posDefiner -A <Indivalue/Flash> `来进一步确定取样位置。
+5. 选择 indiValue 或者 eggFlasher 之前，使用`python src/main.py posDefiner -A <Indivalue/Flash> `来进一步确定取样位置。
 
-6. 选择indiValue或者eggFlasher脚本，此前使用`python src/main.py <indiValue/eggFlasher> -h `获取可能的参数帮助
+6. 选择 indiValue 或者 eggFlasher 脚本，此前使用`python src/main.py <indiValue/eggFlasher> -h `获取可能的参数帮助
 
 ## Screenshots
 
@@ -88,3 +88,8 @@
 <img src="screenshots/eggFlasher.png" style="zoom: 50%"></img>
 
 <p align="center">图 蛋闪脚本实现效果</p>
+
+## TODO:
+
+-   [ ] Crossplatform screenshot function
+-   [ ] Add keyboarn map function to positionDefiner
