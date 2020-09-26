@@ -37,7 +37,7 @@ class individuleOptimizer():
         if platform == 'mobile':
             self.Click = mouseClick
             self.Press = mousePress
-        elif platform == 'pc':
+        elif platform == 'desktop':
             self.Click = keyClick
             self.Press = keyPress
         else:
@@ -143,21 +143,21 @@ class individuleOptimizer():
 
     @staticmethod
     def _numberCapture(name, min_limit, pos1_x, pos1_y, pos2_x, pos2_y):
-        # if not captured, retry for 5 times to make sure: 1.screenshot is right; number is recgonized correctly
+        # if not captured, retry for 5 times to make sure: 1.screenshot is right; indivalue is recgonized correctly
         for count in range(5):
             img = grab_screen(pos1_x, pos1_y, pos2_x, pos2_y)
             img.save(os.path.join('../screenshots', name + '.png'))
             img = Image.open(os.path.join('../screenshots', name + '.png'))
 
-            number = pytesseract.image_to_string(
+            indivalue = pytesseract.image_to_string(
                 img, lang="chi_sim", config='--psm 7 --oem 0 -c tessedit_char_whitelist=0123456789')
 
             try:
-                number = int(number)
-                print(number)
-                # if name == 'HP' and number == 31:   # 单个体择优
+                indivalue = int(indivalue)
+                print(indivalue)
+                # if name == 'HP' and indivalue == 31:   # 单个体择优
                 # return 6
-                if number >= min_limit:
+                if indivalue >= min_limit:
                     return 1
                 return 0
             except Exception:
@@ -176,12 +176,12 @@ class individuleOptimizer():
             consult SD, TG, TF
         '''
         A = self.pos_data['button']['A']
-        HP = self.pos_data['number']['HP']
-        WG = self.pos_data['number']['WG']
-        WF = self.pos_data['number']['WF']
-        SD = self.pos_data['number']['SD']
-        TG = self.pos_data['number']['TG']
-        TF = self.pos_data['number']['TF']
+        HP = self.pos_data['indivalue']['HP']
+        WG = self.pos_data['indivalue']['WG']
+        WF = self.pos_data['indivalue']['WF']
+        SD = self.pos_data['indivalue']['SD']
+        TG = self.pos_data['indivalue']['TG']
+        TF = self.pos_data['indivalue']['TF']
 
         for i in range(4):
             self.Click(*A)
@@ -196,7 +196,7 @@ class individuleOptimizer():
         self.Click(*A)
         time.sleep(0.3)
 
-        requirement = {'SD': [31, SD], 'TG': [0, TG], 'TF': [30, TF]}
+        requirement = {'SD': [31, SD], 'TG': [30, TG], 'TF': [30, TF]}
         for item in requirement:
             count += self._numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                          requirement[item][1][1][0], requirement[item][1][1][1])
