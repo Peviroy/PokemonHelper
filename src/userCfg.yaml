@@ -1,0 +1,15 @@
+# indivadule value expectation
+indiValue:
+    HP: 31
+    WG: 31
+    WF: 31
+    SD: 31
+    TG: 30
+    TF: 30
+
+
+# pytesseract is for text recgnition
+# dont change it unless you are familiar with it 
+pytesseract: 
+  config: '--psm 7 --oem 0 -c tessedit_char_whitelist=0123456789'
+  lang: 'chi_sim'

@@ -7,6 +7,7 @@
 """
 import os
 import time
+import yaml
 import pytesseract
 from PIL import Image
 
@@ -42,6 +43,7 @@ class individuleOptimizer():
             self.Press = keyPress
         else:
             raise Exception('No such platform')
+        self.user_config = yaml.full_load(open('../userCfg.yaml'))
 
     def _step1(self):
         '''
@@ -141,8 +143,7 @@ class individuleOptimizer():
         self.Click(*B)
         time.sleep(0.2)
 
-    @staticmethod
-    def _numberCapture(name, min_limit, pos1_x, pos1_y, pos2_x, pos2_y):
+    def _numberCapture(self, name, min_limit, pos1_x, pos1_y, pos2_x, pos2_y):
         # if not captured, retry for 5 times to make sure: 1.screenshot is right; indivalue is recgonized correctly
         for count in range(5):
             img = grab_screen(pos1_x, pos1_y, pos2_x, pos2_y)
@@ -150,7 +151,7 @@ class individuleOptimizer():
             img = Image.open(os.path.join('../screenshots', name + '.png'))
 
             indivalue = pytesseract.image_to_string(
-                img, lang="chi_sim", config='--psm 7 --oem 0 -c tessedit_char_whitelist=0123456789')
+                img, lang=self.user_config.get('pytesseract').get('lang'), config=self.user_config.get('pytesseract').get('config'))
 
             try:
                 indivalue = int(indivalue)
@@ -183,20 +184,31 @@ class individuleOptimizer():
         TG = self.pos_data['indivalue']['TG']
         TF = self.pos_data['indivalue']['TF']
 
+        HP_value = self.user_config.get('indiValue').get('HP')
+        WG_value = self.user_config.get('indiValue').get('WG')
+        WF_value = self.user_config.get('indiValue').get('WF')
+        SD_value = self.user_config.get('indiValue').get('SD')
+        TG_value = self.user_config.get('indiValue').get('TG')
+        TF_value = self.user_config.get('indiValue').get('TF')
+
         for i in range(4):
             self.Click(*A)
             time.sleep(0.3)
 
         count = 0
 
-        requirement = {'HP': [31, HP], 'WG': [31, WG], 'WF': [31, WF]}
+        requirement = {'_HP': [HP_value, HP],
+                       '_WG': [WG_value, WG],
+                       '_WF': [WF_value, WF]}
         for item in requirement:
             count += self._numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                          requirement[item][1][1][0], requirement[item][1][1][1])
         self.Click(*A)
         time.sleep(0.3)
 
-        requirement = {'SD': [31, SD], 'TG': [30, TG], 'TF': [30, TF]}
+        requirement = {'_SD': [SD_value, SD],
+                       '_TG': [TG_value, TG],
+                       '_TF': [TF_value, TF]}
         for item in requirement:
             count += self._numberCapture(item, requirement[item][0], requirement[item][1][0][0], requirement[item][1][0][1],
                                          requirement[item][1][1][0], requirement[item][1][1][1])
