@@ -48,6 +48,7 @@
 -   pytesseract==0.3.4
 -   PyAutoGUI==0.9.50
 -   Pillow==7.2.0
+-   PyYAML==5.3.1
 
 ## Startup
 
@@ -59,17 +60,25 @@
    python src/main.py -h
    ```
 
-       <img src="screenshots/script_help.png">
+<img src="screenshots/script_help.png">
 
 3. Set 'criPosition\*.json‘之 flag 为 false
 
-4. 根据当前平台选择-P desktop 或者-P mobile，而后输入`python src/main.py posDefiner`来确定按键映射关系。
+4. 根据当前平台选择-P desktop 或者-P mobile，而后输入`python src/main.py posDefiner`来确定[按键映射关系](###KeyMap)。
 
  <img src="screenshots/script_posDefiner.png">
 
 5. 选择 indiValue 或者 eggFlasher 之前，使用`python src/main.py posDefiner -A <Indivalue/Flash> `来进一步确定取样位置。
 
 6. 选择 indiValue 或者 eggFlasher 脚本，此前使用`python src/main.py <indiValue/eggFlasher> -h `获取可能的参数帮助
+
+### KeyMap
+
+当前并不支持由 posDefiner 驱动的交互式按键映射确定，也即是当前只能手动在 criPosition.json 之中进行设置.映射所需的按键名称表如下所示：
+
+```
+'\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'accept', 'add', 'alt', 'altleft', 'altright', 'apps', 'backspace', 'browserback', 'browserfavorites', 'browserforward', 'browserhome', 'browserrefresh', 'browsersearch', 'browserstop', 'capslock', 'clear', 'convert', 'ctrl', 'ctrlleft', 'ctrlright', 'decimal', 'del', 'delete', 'divide', 'down', 'end', 'enter', 'esc', 'escape', 'execute', 'f1', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17', 'f18', 'f19', 'f2', 'f20', 'f21', 'f22', 'f23', 'f24', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'final', 'fn', 'hanguel', 'hangul', 'hanja', 'help', 'home', 'insert', 'junja', 'kana', 'kanji', 'launchapp1', 'launchapp2', 'launchmail', 'launchmediaselect', 'left', 'modechange', 'multiply', 'nexttrack', 'nonconvert', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'numlock', 'pagedown', 'pageup', 'pause', 'pgdn', 'pgup', 'playpause', 'prevtrack', 'print', 'printscreen', 'prntscrn', 'prtsc', 'prtscr', 'return', 'right', 'scrolllock', 'select', 'separator', 'shift', 'shiftleft', 'shiftright', 'sleep', 'space', 'stop', 'subtract', 'tab', 'up', 'volumedown', 'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen', 'command', 'option', 'optionleft', 'optionright'
+```
 
 ## Screenshots
 
